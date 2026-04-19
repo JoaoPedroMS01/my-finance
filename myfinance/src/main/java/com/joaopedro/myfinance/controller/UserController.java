@@ -1,7 +1,7 @@
 package com.joaopedro.myfinance.controller;
 
-import com.joaopedro.myfinance.dto.CreateUserRequestDTO;
-import com.joaopedro.myfinance.dto.UserResponseDTO;
+import com.joaopedro.myfinance.dto.CreateUserRequestDto;
+import com.joaopedro.myfinance.dto.UserResponseDto;
 import com.joaopedro.myfinance.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,8 +22,8 @@ public class UserController {
     }
 
     @PostMapping
-     ResponseEntity<UserResponseDTO> create(@RequestBody @Valid CreateUserRequestDTO request) {
-        UserResponseDTO response = userService.createUser(request);
+     ResponseEntity<UserResponseDto> create(@RequestBody @Valid CreateUserRequestDto request) {
+        UserResponseDto response = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
