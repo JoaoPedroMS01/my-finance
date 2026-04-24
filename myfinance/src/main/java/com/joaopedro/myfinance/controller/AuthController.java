@@ -1,7 +1,7 @@
 package com.joaopedro.myfinance.controller;
 
-import com.joaopedro.myfinance.dto.AuthResponseDto;
-import com.joaopedro.myfinance.dto.LoginRequestDto;
+import com.joaopedro.myfinance.dto.AuthResponse;
+import com.joaopedro.myfinance.dto.LoginRequest;
 import com.joaopedro.myfinance.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody @Valid LoginRequestDto request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 }

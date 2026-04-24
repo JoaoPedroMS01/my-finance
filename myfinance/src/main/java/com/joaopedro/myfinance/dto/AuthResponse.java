@@ -1,13 +1,13 @@
 package com.joaopedro.myfinance.dto;
 
-public class AuthResponseDto {
+public class AuthResponse {
     private String token;
     private String type;
     private String name;
     private String email;
     private String role;
 
-    public AuthResponseDto(String token, String type, String name, String email, String role) {
+    public AuthResponse(String token, String type, String name, String email, String role) {
         this.token = token;
         this.type = type;
         this.name = name;

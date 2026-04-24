@@ -1,8 +1,8 @@
 package com.joaopedro.myfinance.service;
 
 
-import com.joaopedro.myfinance.dto.AuthResponseDto;
-import com.joaopedro.myfinance.dto.LoginRequestDto;
+import com.joaopedro.myfinance.dto.AuthResponse;
+import com.joaopedro.myfinance.dto.LoginRequest;
 import com.joaopedro.myfinance.entity.User;
 import com.joaopedro.myfinance.repository.UserRepository;
 import com.joaopedro.myfinance.security.JwtService;
@@ -25,7 +25,7 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public AuthResponseDto login(LoginRequestDto request) {
+    public AuthResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -40,7 +40,7 @@ public class AuthService {
 
         String token = jwtService.generateToken(userDetails);
 
-        return new AuthResponseDto(
+        return new AuthResponse(
                 token,
                 "Bearer",
                 user.getName(),

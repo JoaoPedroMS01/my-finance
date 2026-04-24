@@ -1,6 +1,6 @@
 package com.joaopedro.myfinance.dto;
 
-public class UserResponseDto {
+public class UserResponse {
     private Long id;
     private String nome;
     private String email;

@@ -1,7 +1,7 @@
 package com.joaopedro.myfinance.service;
 
-import com.joaopedro.myfinance.dto.CreateUserRequestDto;
-import com.joaopedro.myfinance.dto.UserResponseDto;
+import com.joaopedro.myfinance.dto.CreateUserRequest;
+import com.joaopedro.myfinance.dto.UserResponse;
 import com.joaopedro.myfinance.entity.User;
 import com.joaopedro.myfinance.enums.Role;
 import com.joaopedro.myfinance.repository.UserRepository;
@@ -21,7 +21,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserResponseDto createUser(CreateUserRequestDto dto) {
+    public UserResponse createUser(CreateUserRequest dto) {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new RuntimeException("Email já cadastrado");
         }
@@ -36,7 +36,7 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        UserResponseDto responseDTO = new UserResponseDto();
+        UserResponse responseDTO = new UserResponse();
         responseDTO.setId(savedUser.getId());
         responseDTO.setNome(savedUser.getName());
         responseDTO.setEmail(savedUser.getEmail());
