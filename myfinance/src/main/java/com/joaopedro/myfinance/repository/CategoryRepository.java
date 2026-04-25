@@ -13,7 +13,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findByUserIdOrUserIdIsNull(Long userId);
 
-    boolean existsByNameAndUserIdIsNull(String name);
+    boolean existsByNameIgnoreCaseAndUserIdIsNull(String name);
 
-    boolean existsByNameAndUserId(String categoryName, Long userId);
+    boolean existsByNameIgnoreCaseAndUserId(String categoryName, Long userId);
+
+    boolean existsByNameIgnoreCaseAndIdNotAndUserId(String name, Long id, Long userId);
+
 }

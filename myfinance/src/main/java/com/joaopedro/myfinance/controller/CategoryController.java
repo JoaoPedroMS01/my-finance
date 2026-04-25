@@ -32,4 +32,12 @@ public class CategoryController {
         CategoryResponse response = categoryService.create(userDetails.getId(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<CategoryResponse> update(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                   @PathVariable Long id,
+                                                   @RequestBody @Valid CreateCategoryRequest request) {
+        CategoryResponse response = categoryService.update(userDetails.getId(), id, request);
+        return ResponseEntity.ok().body(response);
+    }
 }

@@ -4,8 +4,7 @@ import com.joaopedro.myfinance.dto.CategoryResponse;
 import com.joaopedro.myfinance.dto.CreateCategoryRequest;
 import com.joaopedro.myfinance.entity.Category;
 import com.joaopedro.myfinance.entity.User;
-import com.joaopedro.myfinance.exception.CategoryAlreadyExistsException;
-import com.joaopedro.myfinance.exception.UserNotFoundException;
+import com.joaopedro.myfinance.exception.*;
 import com.joaopedro.myfinance.repository.CategoryRepository;
 import com.joaopedro.myfinance.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -31,15 +30,14 @@ public class CategoryService {
     }
 
     public CategoryResponse create(Long userId, CreateCategoryRequest createCategoryRequest) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado."));
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         String categoryName = createCategoryRequest.getName().trim();
-        String normalizedName = categoryName.toLowerCase();
 
-        if (categoryRepository.existsByNameAndUserIdIsNull(normalizedName)) {
+        if (categoryRepository.existsByNameIgnoreCaseAndUserIdIsNull(categoryName)) {
                 throw new CategoryAlreadyExistsException("Categoria já existe como padrão.");
         }
 
-        if (categoryRepository.existsByNameAndUserId(normalizedName, userId)) {
+        if (categoryRepository.existsByNameIgnoreCaseAndUserId(categoryName, userId)) {
             throw new CategoryAlreadyExistsException("Categoria já existe para este usuário.");
         }
 
@@ -49,6 +47,32 @@ public class CategoryService {
 
         Category savedCategory = categoryRepository.save(category);
         return toDto(savedCategory);
+    }
+
+    public CategoryResponse update(Long userId, Long categoryId, CreateCategoryRequest request) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(CategoryNotFoundException::new);
+        String categoryName = request.getName().trim();
+
+        if (category.getUser() == null) {
+            throw new CategoryNotEditableException();
+        }
+
+        if (!category.getUser().getId().equals(userId)) {
+            throw new CategoryNotBelongsToUserException();
+        }
+
+        if (categoryRepository.existsByNameIgnoreCaseAndUserIdIsNull(categoryName)) {
+            throw new CategoryAlreadyExistsException("Categoria já existe como padrão.");
+        }
+
+        if (categoryRepository.existsByNameIgnoreCaseAndIdNotAndUserId(categoryName, categoryId, userId)) {
+            throw new CategoryAlreadyExistsException("Categoria já existe para este usuário.");
+        }
+
+        category.setName(categoryName);
+        Category updatedCategory = categoryRepository.save(category);
+        return toDto(updatedCategory);
     }
 
     private CategoryResponse toDto(Category category) {
