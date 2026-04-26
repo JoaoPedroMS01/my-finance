@@ -75,6 +75,21 @@ public class CategoryService {
         return toDto(updatedCategory);
     }
 
+    public void delete(Long userId, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(CategoryNotFoundException::new);
+
+        if (category.getUser() == null) {
+            throw new CategoryNotDeletableException();
+        }
+
+        if (!category.getUser().getId().equals(userId)) {
+            throw new CategoryNotBelongsToUserException();
+        }
+
+        categoryRepository.delete(category);
+    }
+
     private CategoryResponse toDto(Category category) {
         CategoryResponse dto = new CategoryResponse();
         dto.setId(category.getId());

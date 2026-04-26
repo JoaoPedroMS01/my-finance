@@ -40,4 +40,11 @@ public class CategoryController {
         CategoryResponse response = categoryService.update(userDetails.getId(), id, request);
         return ResponseEntity.ok().body(response);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                       @PathVariable Long id) {
+        categoryService.delete(userDetails.getId(), id);
+        return ResponseEntity.noContent().build();
+    }
 }
