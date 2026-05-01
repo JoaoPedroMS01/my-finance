@@ -1,5 +1,7 @@
 package com.joaopedro.myfinance.exception;
 
+import com.joaopedro.myfinance.category.exception.*;
+import com.joaopedro.myfinance.user.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

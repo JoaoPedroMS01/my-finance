@@ -1,6 +1,6 @@
 package com.joaopedro.myfinance.security;
-import com.joaopedro.myfinance.entity.User;
-import com.joaopedro.myfinance.repository.UserRepository;
+import com.joaopedro.myfinance.user.domain.User;
+import com.joaopedro.myfinance.user.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
