@@ -1,6 +1,7 @@
 package com.joaopedro.myfinance.exception;
 
 import com.joaopedro.myfinance.category.exception.*;
+import com.joaopedro.myfinance.user.exception.EmailAlreadyInUseException;
 import com.joaopedro.myfinance.user.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +43,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CategoryNotDeletableException.class)
     public ResponseEntity<Map<String, String>> handleCategoryNotDeletable(CategoryNotDeletableException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(ERROR_KEY, ex.getMessage()));
+    }
+
+    @ExceptionHandler(EmailAlreadyInUseException.class)
+    public ResponseEntity<Map<String, String>> handleEmailAlreadyInUse(EmailAlreadyInUseException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(ERROR_KEY, ex.getMessage()));
     }
 }

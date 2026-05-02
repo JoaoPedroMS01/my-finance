@@ -1,5 +1,6 @@
 package com.joaopedro.myfinance.user.service;
 
+import com.joaopedro.myfinance.user.exception.EmailAlreadyInUseException;
 import com.joaopedro.myfinance.user.repository.UserRepository;
 import com.joaopedro.myfinance.user.domain.Role;
 import com.joaopedro.myfinance.user.domain.User;
@@ -23,7 +24,7 @@ public class UserService {
 
     public UserResponse createUser(CreateUserRequest dto) {
         if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new RuntimeException("Email já cadastrado");
+            throw new EmailAlreadyInUseException();
         }
 
         User user = new User();
