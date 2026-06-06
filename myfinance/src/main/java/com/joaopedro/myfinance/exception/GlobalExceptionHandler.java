@@ -2,6 +2,8 @@ package com.joaopedro.myfinance.exception;
 
 import com.joaopedro.myfinance.category.exception.*;
 import com.joaopedro.myfinance.transaction.exception.InvalidAmountException;
+import com.joaopedro.myfinance.transaction.exception.TransactionNotBelongsToUserException;
+import com.joaopedro.myfinance.transaction.exception.TransactionNotFoundException;
 import com.joaopedro.myfinance.user.exception.EmailAlreadyInUseException;
 import com.joaopedro.myfinance.user.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -57,6 +59,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidAmountException.class)
     public ResponseEntity<Map<String, String>> handleInvalidAmount(InvalidAmountException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(ERROR_KEY, ex.getMessage()));
+    }
+
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleTransactionNotFound(TransactionNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(ERROR_KEY, ex.getMessage()));
+    }
+
+    @ExceptionHandler(TransactionNotBelongsToUserException.class)
+    public ResponseEntity<Map<String, String>> handleTransactionNotBelongsToUser(TransactionNotBelongsToUserException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(ERROR_KEY, ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
