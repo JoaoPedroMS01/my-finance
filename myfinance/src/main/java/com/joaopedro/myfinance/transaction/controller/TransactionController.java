@@ -2,6 +2,7 @@ package com.joaopedro.myfinance.transaction.controller;
 
 import com.joaopedro.myfinance.security.CustomUserDetails;
 import com.joaopedro.myfinance.transaction.dto.CreateTransactionRequest;
+import com.joaopedro.myfinance.transaction.dto.TransactionFilterRequest;
 import com.joaopedro.myfinance.transaction.dto.TransactionResponse;
 import com.joaopedro.myfinance.transaction.dto.UpdateTransactionRequest;
 import com.joaopedro.myfinance.transaction.service.TransactionService;
@@ -24,8 +25,8 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TransactionResponse>> findAllByUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<TransactionResponse> transactions = transactionService.findAllByUser(userDetails.getId());
+    public ResponseEntity<List<TransactionResponse>> findAllByUser(@AuthenticationPrincipal CustomUserDetails userDetails, TransactionFilterRequest filter) {
+        List<TransactionResponse> transactions = transactionService.findAllByUser(userDetails.getId(), filter);
         return ResponseEntity.ok().body(transactions);
     }
 

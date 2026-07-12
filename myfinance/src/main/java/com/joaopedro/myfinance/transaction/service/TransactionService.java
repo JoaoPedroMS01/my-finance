@@ -6,12 +6,15 @@ import com.joaopedro.myfinance.category.exception.CategoryNotFoundException;
 import com.joaopedro.myfinance.category.repository.CategoryRepository;
 import com.joaopedro.myfinance.transaction.domain.Transaction;
 import com.joaopedro.myfinance.transaction.dto.CreateTransactionRequest;
+import com.joaopedro.myfinance.transaction.dto.TransactionFilterRequest;
 import com.joaopedro.myfinance.transaction.dto.TransactionResponse;
 import com.joaopedro.myfinance.transaction.dto.UpdateTransactionRequest;
 import com.joaopedro.myfinance.transaction.exception.InvalidAmountException;
 import com.joaopedro.myfinance.transaction.exception.TransactionNotFoundException;
 import com.joaopedro.myfinance.transaction.repository.TransactionRepository;
+import com.joaopedro.myfinance.transaction.specification.TransactionSpecification;
 import com.joaopedro.myfinance.user.domain.User;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -55,8 +58,18 @@ public class TransactionService {
         return toDto(savedTransaction);
     }
 
-    public List<TransactionResponse> findAllByUser(Long userId) {
-        List<Transaction> transactions = transactionRepository.findByUserId(userId);
+    public List<TransactionResponse> findAllByUser(Long userId, TransactionFilterRequest filter) {
+
+        Specification<Transaction> spec = Specification
+                .allOf(TransactionSpecification.belongsToUser(userId))
+                .and(TransactionSpecification.hasCategory(filter.getCategoryId()))
+                .and(TransactionSpecification.hasType(filter.getType()))
+                .and(TransactionSpecification.descriptionContains(filter.getDescription()))
+                .and(TransactionSpecification.betweenDates(
+                        filter.getStartDate(),
+                        filter.getEndDate()));
+
+        List<Transaction> transactions = transactionRepository.findAll(spec);
         return transactions.stream()
                 .map(this::toDto).toList();
     }
