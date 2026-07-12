@@ -8,6 +8,7 @@ import com.joaopedro.myfinance.transaction.domain.Transaction;
 import com.joaopedro.myfinance.transaction.domain.TransactionType;
 import com.joaopedro.myfinance.transaction.dto.CreateTransactionRequest;
 import com.joaopedro.myfinance.transaction.dto.TransactionResponse;
+import com.joaopedro.myfinance.transaction.dto.TransactionFilterRequest;
 import com.joaopedro.myfinance.transaction.dto.UpdateTransactionRequest;
 import com.joaopedro.myfinance.transaction.exception.InvalidAmountException;
 import com.joaopedro.myfinance.transaction.exception.TransactionNotFoundException;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -134,7 +136,6 @@ class TransactionServiceTest {
         verifyNoInteractions(transactionRepository);
     }
 
-    // Tests for findAllByUser
     @Test
     void shouldReturnAllTransactionsForUser() {
         var user = new User();
@@ -162,31 +163,30 @@ class TransactionServiceTest {
         transaction2.setCategory(category);
         transaction2.setUser(user);
 
-        when(transactionRepository.findByUserId(1L)).thenReturn(Arrays.asList(transaction1, transaction2));
+        when(transactionRepository.findAll(any(Specification.class))).thenReturn(Arrays.asList(transaction1, transaction2));
 
-        List<TransactionResponse> result = transactionService.findAllByUser(1L);
+        List<TransactionResponse> result = transactionService.findAllByUser(1L, new TransactionFilterRequest());
 
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals("Mercado", result.get(0).getDescription());
         assertEquals("Restaurante", result.get(1).getDescription());
 
-        verify(transactionRepository).findByUserId(1L);
+        verify(transactionRepository).findAll(any(Specification.class));
     }
 
     @Test
     void shouldReturnEmptyListWhenUserHasNoTransactions() {
-        when(transactionRepository.findByUserId(1L)).thenReturn(Arrays.asList());
+        when(transactionRepository.findAll(any(Specification.class))).thenReturn(Arrays.asList());
 
-        List<TransactionResponse> result = transactionService.findAllByUser(1L);
+        List<TransactionResponse> result = transactionService.findAllByUser(1L, new TransactionFilterRequest());
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
 
-        verify(transactionRepository).findByUserId(1L);
+        verify(transactionRepository).findAll(any(Specification.class));
     }
 
-    // Tests for findById
     @Test
     void shouldReturnTransactionWhenIdExistsAndBelongsToUser() {
         var user = new User();
@@ -226,7 +226,6 @@ class TransactionServiceTest {
         verify(transactionRepository).findByIdAndUserId(999L, 1L);
     }
 
-    // Tests for update
     @Test
     void shouldUpdateTransactionWhenDataIsValid() {
         var user = new User();
@@ -339,7 +338,6 @@ class TransactionServiceTest {
         verify(categoryRepository).findById(999L);
     }
 
-    // Tests for delete
     @Test
     void shouldDeleteTransactionWhenItExistsAndBelongsToUser() {
         var user = new User();
